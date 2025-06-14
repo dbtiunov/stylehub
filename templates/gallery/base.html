@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_settings.site_name }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+      {% if site_settings.background_image %}
+        body {
+          background-image: url('{{ site_settings.background_image.url }}');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
+      {% endif %}
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="{% url 'gallery' %}" class="site-name">
+        {% if site_settings.logo %}
+          <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name }}" class="logo">
+        {% else %}
+          {{ site_settings.site_name }}
+        {% endif %}
+      </a>
+      {% if site_settings.instagram_profile %}
+        <a href="{{ site_settings.instagram_profile }}" class="social-icon" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="instagram-icon">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      {% endif %}
+    </header>
+
+    <main>{% block content %}{% endblock %}</main>
+  </div>
+</body>
+</html>

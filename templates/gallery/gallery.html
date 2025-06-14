@@ -1,0 +1,22 @@
+{% extends 'gallery/base.html' %}
+
+{% block title %}{{ site_settings.site_name }} - Collections{% endblock %}
+
+{% block content %}
+  <h1>Collections</h1>
+
+  {% if collections %}
+    <div class="collections-grid">
+      {% for collection in collections %}
+        <a href="{{ collection.get_absolute_url }}" class="collection-card">
+          <img src="{{ collection.image.url }}" alt="{{ collection.title }}" class="collection-image">
+          <div class="collection-info">
+            <h2 class="collection-title">{{ collection.title }}</h2>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No collections available yet.</p>
+  {% endif %}
+{% endblock %}
