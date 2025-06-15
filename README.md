@@ -109,3 +109,5 @@ StyleHub is a Django web application that allows users to create and manage coll
 - django-cleanup (for automatic file cleanup)
 - django-environ (for environment variables management)
 - psycopg2 (PostgreSQL database adapter)
+- gunicorn (for serving the application in production)
+- whitenoise (for serving static files in production)
