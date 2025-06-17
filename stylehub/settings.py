@@ -148,3 +148,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_SUPERUSER_USERNAME = env.str('SUPERUSER_USERNAME', default='admin')
+DEFAULT_SUPERUSER_PASSWORD = env.str('SUPERUSER_PASSWORD', default='admin')
