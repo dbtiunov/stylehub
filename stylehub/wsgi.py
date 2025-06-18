@@ -6,6 +6,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stylehub.settings')
 
 application = get_wsgi_application()
 
-# Use whitenoise to serve static files in production
+# Use whitenoise to serve static files
 from whitenoise import WhiteNoise
 application = WhiteNoise(application)
