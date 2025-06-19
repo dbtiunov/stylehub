@@ -136,3 +136,7 @@ To deploy the application:
 - psycopg2 (PostgreSQL database adapter)
 - gunicorn (for serving the application in production)
 - whitenoise (for serving static files in production)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
