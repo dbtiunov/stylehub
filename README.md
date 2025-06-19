@@ -48,7 +48,15 @@ StyleHub is a Django web application that allows users to create and manage coll
    Then edit the `.env` file to set your environment variables:
    - `SECRET_KEY`: A secret key for Django
    - `DEBUG`: Set to `True` for development, `False` for production
-   - `DJANGO_ALLOWED_HOSTS`: Comma-separated list of allowed hosts
+   - `ALLOWED_HOSTS`: Comma-separated list of allowed hosts
+   - `CSRF_TRUSTED_ORIGINS`: Comma-separated list of trusted origins for CSRF
+   - `DATABASE_HOST`: PostgreSQL database host (default: localhost)
+   - `DATABASE_PORT`: PostgreSQL database port (default: 5432)
+   - `DATABASE_NAME`: PostgreSQL database name
+   - `DATABASE_USER`: PostgreSQL database user
+   - `DATABASE_PASSWORD`: PostgreSQL database password
+   - `SUPERUSER_USERNAME`: Default admin username (default: admin)
+   - `SUPERUSER_PASSWORD`: Default admin password (default: admin)
 
 5. Apply migrations:
    ```
@@ -56,8 +64,10 @@ StyleHub is a Django web application that allows users to create and manage coll
    ```
 
 6. Create a superuser:
+
+   Use the custom management command (uses credentials from .env):
    ```
-   python manage.py createsuperuser
+   python manage.py init_superuser
    ```
 
 7. Run the development server:
@@ -101,6 +111,21 @@ StyleHub is a Django web application that allows users to create and manage coll
 
 - `static/` - Static files (CSS, JavaScript, etc.)
 - `media/` - Uploaded media files (images)
+
+## Deployment
+
+The project includes a Procfile for easy deployment to platforms like Heroku. The Procfile automates the following steps:
+
+1. Run database migrations
+2. Initialize a default superuser (using credentials from environment variables)
+3. Collect static files
+4. Start the Gunicorn server
+
+To deploy the application:
+
+1. Set up all required environment variables on your hosting platform
+2. Push the code to your hosting platform
+3. The application should automatically deploy using the commands in the Procfile
 
 ## Dependencies
 
