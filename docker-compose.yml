@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-stylehub}
+      POSTGRES_USER: ${DATABASE_USER:-stylehub}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-stylehub}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: ${SECRET_KEY:-change-me}
+      ALLOWED_HOSTS: "*"
+      CSRF_TRUSTED_ORIGINS: "http://localhost:8000,http://127.0.0.1:8000"
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: ${DATABASE_NAME:-stylehub}
+      DATABASE_USER: ${DATABASE_USER:-stylehub}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-stylehub}
+      SUPERUSER_USERNAME: ${SUPERUSER_USERNAME:-admin}
+      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD:-admin}
+    volumes:
+      - media:/app/media
+      - staticfiles:/app/staticfiles
+
+volumes:
+  pgdata:
+  media:
+  staticfiles:

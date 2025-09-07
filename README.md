@@ -1,142 +1,115 @@
 # StyleHub
 
-StyleHub is a Django web application that allows users to create and manage collections of items. The application consists of a Django backend with templates for the frontend. The main purpose is to display user-created collections and items on the main page.
+StyleHub is a Django web application that lets you create and showcase collections of items with images and links. It 
+can be used for promoting referral links.
+
+## Screenshots
+
+<p>
+  <img src="static/images/screenshots/collections_screenshot.png" alt="Collections" width="300" />
+  <span>&nbsp;&nbsp;&nbsp;</span>
+  <img src="static/images/screenshots/items_screenshot.png" alt="Items" width="300" />
+</p>
 
 ## Features
 
-- **Authentication and Authorization**
-  - Django's built-in authentication system
-  - Admin interface for managing content
-  - Single user access (admin)
+- Authentication and admin interface
+- Site settings (site name, background, logo)
+- Collections CRUD (title, slug, image)
+- Items CRUD (title, URL, image, belongs to collection)
 
-- **Site Settings**
-  - Customizable site name
-  - Uploadable background image
-  - Uploadable logo
+## Quickstart (Docker)
 
-- **Collections Management**
-  - Create, read, update, delete collections
-  - Each collection has a title, slug, and image
+Requirements: Docker and Docker Compose.
 
-- **Collection Items Management**
-  - Create, read, update, delete items within collections
-  - Each item has a title, URL, image, and link to parent collection
-
-## Installation
-
-1. Clone the repository:
-   ```
+1. Clone the repo
+   ```bash
    git clone https://github.com/yourusername/stylehub.git
    cd stylehub
    ```
 
-2. Create a virtual environment and activate it:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+2. Configure environment
+   ```bash
+   cp .env.example .env
+   # Optionally edit .env to change defaults (SECRET_KEY, DB creds, etc.)
    ```
 
-3. Install dependencies:
+3. Build and run
+   ```bash
+   docker compose up --build
    ```
+
+4. Open the app
+   - App: http://localhost:8000/
+   - Admin: http://localhost:8000/admin/
+   - Default admin credentials (configurable via env):
+     - username: admin
+     - password: admin
+
+What the container does on startup (similar to Procfile):
+- Applies migrations
+- Ensures a default superuser exists (using SUPERUSER_* env vars)
+- Collects static files
+- Starts Gunicorn on :8000
+
+## Local Development (without Docker)
+
+1. Create virtualenv and install deps
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\\Scripts\\activate
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
-   ```
+2. Configure environment
+   ```bash
    cp .env.example .env
+   # For local dev you can use Postgres or adjust settings to use your DB
    ```
-   Then edit the `.env` file to set your environment variables:
-   - `SECRET_KEY`: A secret key for Django
-   - `DEBUG`: Set to `True` for development, `False` for production
-   - `ALLOWED_HOSTS`: Comma-separated list of allowed hosts
-   - `CSRF_TRUSTED_ORIGINS`: Comma-separated list of trusted origins for CSRF
-   - `DATABASE_HOST`: PostgreSQL database host (default: localhost)
-   - `DATABASE_PORT`: PostgreSQL database port (default: 5432)
-   - `DATABASE_NAME`: PostgreSQL database name
-   - `DATABASE_USER`: PostgreSQL database user
-   - `DATABASE_PASSWORD`: PostgreSQL database password
-   - `SUPERUSER_USERNAME`: Default admin username (default: admin)
-   - `SUPERUSER_PASSWORD`: Default admin password (default: admin)
 
-5. Apply migrations:
-   ```
+3. Apply migrations and create admin
+   ```bash
    python manage.py migrate
-   ```
-
-6. Create a superuser:
-
-   Use the custom management command (uses credentials from .env):
-   ```
    python manage.py init_superuser
    ```
 
-7. Run the development server:
-   ```
+4. Run dev server
+   ```bash
    python manage.py runserver
    ```
 
-8. Access the application at http://127.0.0.1:8000/
+## Configuration
 
-## Usage
-
-1. Log in to the admin interface at http://127.0.0.1:8000/admin/ using the superuser credentials.
-
-2. Create site settings:
-   - Go to "Site Settings" and add a new entry with your site name, background image, and logo.
-
-3. Create collections:
-   - Go to "Collections" and add new collections with titles and images.
-   - The slug will be automatically generated from the title if not provided.
-
-4. Add items to collections:
-   - You can add items directly from the collection edit page or go to "Collection Items" to add them separately.
-   - Each item requires a title, URL, image, and must be linked to a collection.
-
-5. View the collections on the main page at http://127.0.0.1:8000/
-
-6. Click on a collection to view its items.
+Environment variables (via .env or Docker Compose):
+- SECRET_KEY: Django secret key
+- DEBUG: True/False
+- ALLOWED_HOSTS: e.g. * or example.com,api.example.com
+- CSRF_TRUSTED_ORIGINS: e.g. http://localhost:8000,http://127.0.0.1:8000
+- DATABASE_HOST, DATABASE_PORT, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD
+- SUPERUSER_USERNAME, SUPERUSER_PASSWORD
 
 ## Project Structure
 
-- `gallery/` - Main application directory
-  - `models.py` - Database models (SiteSettings, Collection, CollectionItem)
-  - `views.py` - Views for displaying collections and items
-  - `admin.py` - Admin interface configuration
-  - `urls.py` - URL patterns for the application
-
-- `templates/gallery/` - HTML templates
-  - `base.html` - Base template with common structure and styling
-  - `gallery.html` - Template for displaying all collections
-  - `collection.html` - Template for displaying a specific collection and its items
-
-- `static/` - Static files (CSS, JavaScript, etc.)
-- `media/` - Uploaded media files (images)
+- gallery/ — app with models, views, admin, urls
+- templates/gallery/ — base.html, gallery.html, collection.html
+- static/ — CSS and screenshots
+- media/ — uploaded images
 
 ## Deployment
 
-The project includes a Procfile for easy deployment to platforms like Heroku. The Procfile automates the following steps:
-
-1. Run database migrations
-2. Initialize a default superuser (using credentials from environment variables)
-3. Collect static files
-4. Start the Gunicorn server
-
-To deploy the application:
-
-1. Set up all required environment variables on your hosting platform
-2. Push the code to your hosting platform
-3. The application should automatically deploy using the commands in the Procfile
+- Procfile automates: migrate → init_superuser → collectstatic → gunicorn
+- Dockerfile runs the same sequence for container deployments
 
 ## Dependencies
 
 - Django
-- Pillow (for image handling)
-- django-cleanup (for automatic file cleanup)
-- django-environ (for environment variables management)
-- psycopg2 (PostgreSQL database adapter)
-- gunicorn (for serving the application in production)
-- whitenoise (for serving static files in production)
+- Pillow
+- django-cleanup
+- django-environ
+- psycopg2
+- gunicorn
+- whitenoise
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
